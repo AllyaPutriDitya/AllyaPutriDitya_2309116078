@@ -1,62 +1,81 @@
 # Allya Putri Ditya - 2309116078 
+class Node :
+    def __init__(self, data):
+        self.data = data
+        self.nect = None
 
 class Boneka :
     def __init__(self):
-        self.order = [] #untuk simpan orderan
+        self.head = None
 
     def create_order(self, order_code, user_name, doll_name, color, size, quantity): #function untuk menambah orderan
-        order = {"Item Code": order_code, "User Name": user_name, "Doll Name": doll_name, "Color": color,"Size": size, "Quantity": quantity}
-        self.order.append(order)
+        order = Node({"Item Code": order_code, "User Name": user_name, "Doll Name": doll_name, "Color": color,"Size": size, "Quantity": quantity})
+        if self.head is None : #jika self.head masih kosong
+            self.head = order
+        else:
+            while self.head is not None : #jika self.head sudah ada
+                self.head.next #akan diletakkan setelah head
+            self.head.next = order
         print("\nSuccessfully ordered.\nsend to our email (allya09ditya@gmail.com) to do your payment immediately!")
 
     def read_order(self,order_code): #function untuk membaca orderan
-        for order in self.order: #mengecek apakah orderan ada dalam self.order
-            if order["Item Code"] == order_code : #mengecek apakah code ada dalam orderan
+        current = self.head
+        while current:
+            if current.data == order_code : #mengecek apakah code ada dalam orderan
                 print ("================================================")
                 print ("                  The Order                     ")
                 print ("================================================")
-                print("Item Code    : ", order["Item Code"])
-                print("User Name    : ", order["User Name"])
-                print("Doll Name    : ", order["Doll Name"])
-                print("Color        : ", order["Color"])
-                print("Size         : ", order["Size"])
-                print("Quantity     : ", order["Quantity"])
-                print("Total Price  :  IDR", order["Quantity"]*80000 )
+                print("Item Code    : ", current.data["Item Code"])
+                print("User Name    : ", current.data["User Name"])
+                print("Doll Name    : ", current.data["Doll Name"])
+                print("Color        : ", current.data["Color"])
+                print("Size         : ", current.data["Size"])
+                print("Quantity     : ", current.data["Quantity"])
+                print("Total Price  :  IDR", current.data["Quantity"]*80000 )
                 print ("================================================")
                 return
+            current = current.next
         print("\nOrder not found!\n")
 
     def update_order(self, order_code, user_name, doll_name, color, size, quantity): #function untuk update orderan
-        for order in self.order: #mengecek apakah orderan ada dalam self.order
-            if order["Item Code"] == order_code : #mengecek apakah code ada dalam orderan
+        current = self.head
+        while current:
+            if current.data["Item Code"] == order_code : #mengecek apakah code ada dalam orderan
                 if user_name:
-                    order["User Name"] = user_name
+                    current.data["User Name"] = user_name
                 if doll_name:
-                    order["Doll Name"] = doll_name
+                    current.data["Doll Name"] = doll_name
                 if color:
-                    order["Color"] = color
+                    current.data["Color"] = color
                 if size :
-                    order["Size"] = size 
+                    current.data["Size"] = size 
                 if quantity :
-                    order["Quantity"] = quantity
+                    current.data["Quantity"] = quantity
                 print("\nOrder successfully updated!\n")
                 return
+            current = current.next #current akan berubah dan didefinisikan current.next
             print("\nOrder not found!\n")
 
     def delete_order(self, order_code): #function untuk menghapus orderan
-        for order in self.order: #mengecek apakah orderan ada dalam self.order
-            if order["Item Code"] == order_code:#mengecek apakah code ada dalam orderan
+        current = self.head
+        prev = None
+        while current:
+            if current.data["Item Code"] == order_code:#mengecek apakah code ada dalam orderan
                 ask = (input("are you sure? (y/n) : "))
                 if ask == "y":
-                    self.order.remove(order)
+                    if prev:
+                        prev.next = current.next
+                    else:
+                        self.head = current.next
                     print("\nOrder successfully deleted!\n")
                     return
                 elif ask == "n" :
                     return
                 else :
                     print ("Invalid choice, try again!")
-            else :
-                print ("\nOrder not found!\n")
+            prev = current
+            current = current.next
+        print ("\nOrder not found!\n")
 
 # Main program
 if __name__ == "__main__":
