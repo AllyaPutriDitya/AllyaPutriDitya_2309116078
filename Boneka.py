@@ -51,7 +51,7 @@ class Boneka :
                 current.next = new_order
         else:
             print("Invalid position!")
-        print("\nSuccessfully ordered.\nsend to our email (allya09ditya@gmail.com) to do your payment immediately!")
+    print("\nSuccessfully ordered.\nsend to our email (allya09ditya@gmail.com) to do your payment immediately!")
 
     def read_order(self,order_code): #function untuk membaca orderan
         current = self.head
@@ -112,10 +112,74 @@ class Boneka :
             current = current.next
         print ("\nOrder not found!\n")
 
-    def display_orders(self): #function untuk menampilkan urutan orderan yang sudah diinput
+    def mergeSort(self, arr, key):
+        if len(arr) > 1:
+            mid = len(arr) // 2
+            L = arr[:mid] #mendefinisikan bagian kiri
+            R = arr[mid:] #mendefinisikan bagian kanan
+
+            self.mergeSort(L, key)
+            self.mergeSort(R, key)
+
+            i = j = k = 0
+
+            while i < len(L) and j < len(R):
+                if L[i][key].lower() <= R[j][key].lower(): #mengurutkan orderan tanpa membedakan huruf yang sama di bagian capslock dan tidak capslock
+                    arr[k] = L[i]
+                    i += 1
+                else:
+                    arr[k] = R[j]
+                    j += 1
+                k += 1
+
+            while i < len(L):
+                arr[k] = L[i]
+                i += 1
+                k += 1
+
+            while j < len(R):
+                arr[k] = R[j]
+                j += 1
+                k += 1
+
+    def display_orders(self, key='Item Code'): #menampilkan order sesuai item code
+        current = self.head
+        if current is None: #jika orderan tidak ada
+            print("\nOrders are still empty")
+            return
+
+        order_list = []
+        while current:
+            order_list.append(current.data)
+            current = current.next
+
+        if key == 'User Name': #jika parameter berisikan user name
+            print("\nSorting orders by User Name...")
+        else:
+            print("\nSorting orders by", key)
+
+        self.mergeSort(order_list, key) # Memanggil metode mergeSort untuk mengurutkan sesuai opsi yang telah dipilih
+
+        print("\n================================================")
+        print("              Berryliz Order Lists              ")
+        print("================================================\n")
+        for order in order_list:
+            print("================================================")
+            print("                  The Order                     ")
+            print("================================================")
+            print("Item Code    : ", order["Item Code"])
+            print("User Name    : ", order["User Name"])
+            print("Doll Name    : ", order["Doll Name"])
+            print("Color        : ", order["Color"])
+            print("Size         : ", order["Size"])
+            print("Quantity     : ", order["Quantity"])
+            print("Total Price  :  IDR", order["Quantity"] * 80000)
+            print("================================================")
+
+    def display_node(self): #function untuk menampilkan urutan orderan yang sudah diinput
         current = self.head
         if current is None: #jika orderan yang dicari tidak ada
-            print("\nNo orders available.")
+            print("\nOrders are still empty.")
             return
         
         print("\n================================================")
@@ -134,7 +198,7 @@ class Boneka :
             print("Size         : ", current.data["Size"])
             print("Quantity     : ", current.data["Quantity"])
             print("Total Price  :  IDR", current.data["Quantity"]*80000 )
-            print ("================================================")
+            print ("================================================\n")
             current = current.next
         print("\n================================================")
 
@@ -183,7 +247,18 @@ if __name__ == "__main__":
             boneka.delete_order(order_code) #diarahkan ke function delete_order
 
         elif pilihan == "5":
-            boneka.display_orders()
+            print("\n1. Sort by Item Code")
+            print("2. Sort by User Name")
+            print("3. Sort by Node")
+            option = input("Enter the sorting option: ")
+            if option == "1":
+                boneka.display_orders("Item Code")
+            elif option == "2":
+                boneka.display_orders("User Name")
+            elif option == "3":
+                boneka.display_node()
+            else:
+                print("Invalid sorting option.")
 
         elif pilihan == "6":
             break
