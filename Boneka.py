@@ -1,8 +1,10 @@
 # Allya Putri Ditya - 2309116078 
+import math
+
 class Node :
     def __init__(self, data):
         self.data = data
-        self.nect = None
+        self.next = None
 
 class Boneka :
     def __init__(self):
@@ -51,12 +53,12 @@ class Boneka :
                 current.next = new_order
         else:
             print("Invalid position!")
-    print("\nSuccessfully ordered.\nsend to our email (allya09ditya@gmail.com) to do your payment immediately!")
+        print("\nSuccessfully ordered.\nsend to our email (allya09ditya@gmail.com) to do your payment immediately!")
 
     def read_order(self,order_code): #function untuk membaca orderan
         current = self.head
         while current:
-            if current.data == order_code : #mengecek apakah code ada dalam orderan
+            if current.data["Item Code"]  == order_code : #mengecek apakah code ada dalam orderan
                 print ("================================================")
                 print ("                  The Order                     ")
                 print ("================================================")
@@ -154,17 +156,19 @@ class Boneka :
             current = current.next
 
         if key == 'User Name': #jika parameter berisikan user name
-            print("\nSorting orders by User Name...")
+            print("\nSorting orders by User Name")
         else:
             print("\nSorting orders by", key)
 
         self.mergeSort(order_list, key) # Memanggil metode mergeSort untuk mengurutkan sesuai opsi yang telah dipilih
 
         print("\n================================================")
+        print("------------------------------------------------")
         print("              Berryliz Order Lists              ")
+        print("------------------------------------------------")
         print("================================================\n")
         for order in order_list:
-            print("================================================")
+            print("\n\n================================================")
             print("                  The Order                     ")
             print("================================================")
             print("Item Code    : ", order["Item Code"])
@@ -188,7 +192,7 @@ class Boneka :
         print("------------------------------------------------")
         print("================================================\n")
         while current:
-            print ("================================================")
+            print ("\n\n================================================")
             print ("                  The Order                     ")
             print ("================================================")
             print("Item Code    : ", current.data["Item Code"])
@@ -200,7 +204,64 @@ class Boneka :
             print("Total Price  :  IDR", current.data["Quantity"]*80000 )
             print ("================================================\n")
             current = current.next
-        print("\n================================================")
+
+    def search_order(self, key, value):
+        if key not in ["Item Code", "User Name"]: #mengecek inputan yang diberikan valid atau tidak
+            print("Invalid search key.")
+            return
+
+        current = self.head
+        order_list = []
+        index = 0
+
+        while current:
+            order_list.append(current.data)
+            current = current.next
+            index += 1
+
+        if key == "1": #mencari berdasarkan Item Code
+            order_list.sort(key=lambda x: x[key])
+        else:   #mencari berdasarkan User Name
+            order_list.sort(key=lambda x: x[key].lower())
+
+        n = len(order_list)
+        x = value
+        step = math.floor(math.sqrt(n)) #mencari hasil akar dari panjang orderan
+        prev = 0
+
+        while order_list[int(min(step, n) - 1)][key] < x: #untuk menentukan rentang di mana nilai yang dicari mungkin berada
+            prev = step 
+            step += math.sqrt(n)
+            if prev >= n: #jika melebihi atau sama dengan panjang order_list
+                print("Order not found!")
+                return -1
+
+        while order_list[int(prev)][key] < x: #menemukan nilai yang dicari dalam rentang yang sudah ditentukan
+            prev += 1
+            if prev == min(step, n): #jika sama dengan nilai minimal dari step dan n
+                print("Order not found!")
+                return -1
+
+        if order_list[int(prev)][key] == x: #menampilkan index dan detail orderan
+            index = 0
+            current = self.head
+            while current:
+                if current.data == order_list[int(prev)]:
+                    print("\n\nOrder found at index:", index)
+                    print("================================================")
+                    print("Item Code    : ", current.data["Item Code"])
+                    print("User Name    : ", current.data["User Name"])
+                    print("Doll Name    : ", current.data["Doll Name"])
+                    print("Color        : ", current.data["Color"])
+                    print("Size         : ", current.data["Size"])
+                    print("Quantity     : ", current.data["Quantity"])
+                    print("Total Price  :  IDR", current.data["Quantity"] * 80000)
+                    print("================================================\n")
+                    return
+                current = current.next
+                index += 1
+        else:
+            print("Order not found!")
 
 # Main program
 if __name__ == "__main__":
@@ -216,7 +277,8 @@ if __name__ == "__main__":
         print("3. Update Order")
         print("4. Delete Order")
         print("5. Display Order")
-        print("6. Exit")
+        print("6. Search Order")
+        print("7. Exit")
         pilihan = input("enter the number : ")
 
         if pilihan == "1":
@@ -261,6 +323,17 @@ if __name__ == "__main__":
                 print("Invalid sorting option.")
 
         elif pilihan == "6":
+            print ("\n1. Search by Item Code")
+            print ("2. Search by User Name")
+            search_key = input("Enter Search by : ")
+            if search_key == "1":
+                search_value = input("Enter the Item Code to search : ")
+                boneka.search_order("Item Code", search_value)
+            elif search_key == "2":
+                search_value = input("Enter the User Name to search : ")
+                boneka.search_order("User Name", search_value)
+
+        elif pilihan == "7":
             break
 
         else :
