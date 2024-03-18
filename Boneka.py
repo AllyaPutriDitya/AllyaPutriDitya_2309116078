@@ -53,7 +53,6 @@ class Boneka :
                 current.next = new_order
         else:
             print("Invalid position!")
-        print("\nSuccessfully ordered.\nsend to our email (allya09ditya@gmail.com) to do your payment immediately!")
 
     def read_order(self,order_code): #function untuk membaca orderan
         current = self.head
@@ -267,6 +266,10 @@ class Boneka :
 if __name__ == "__main__":
     boneka = Boneka() #memberi variabel objek dari class
 
+    # record data
+    boneka.create_order("XZ1", "Chenle", "Dolphin", "Light Blue", 65, 7, "first")
+    boneka.create_order("BB4", "Mark Lee", "Watermelon", "Red", 25, 3, "last")
+
     while True :
         print ("\n================================================")
         print ("                Berryliz Shop                   ")
@@ -292,6 +295,7 @@ if __name__ == "__main__":
             boneka.create_order(order_code, user_name, doll_name, color, size, quantity,position) #diarahkan ke function create_order
 
         elif pilihan == "2":
+            print("\nnote : It's important to remember the letter size! ")
             order_code = input("Enter the order code : ")
             boneka.read_order(order_code) #diarahkan ke function read_order
 
@@ -305,6 +309,7 @@ if __name__ == "__main__":
             boneka.update_order(order_code, user_name, doll_name, color, size, quantity) #diarahkan ke function update_order
 
         elif pilihan == "4":
+            print("\nnote : It's important to remember the letter size! ")
             order_code = input("Enter your Order Code to delete : ")
             boneka.delete_order(order_code) #diarahkan ke function delete_order
 
@@ -327,9 +332,11 @@ if __name__ == "__main__":
             print ("2. Search by User Name")
             search_key = input("Enter Search by : ")
             if search_key == "1":
+                print("\nnote : It's important to remember the letter size! ")
                 search_value = input("Enter the Item Code to search : ")
                 boneka.search_order("Item Code", search_value)
             elif search_key == "2":
+                print("\nnote : It's important to remember the letter size! ")
                 search_value = input("Enter the User Name to search : ")
                 boneka.search_order("User Name", search_value)
 
